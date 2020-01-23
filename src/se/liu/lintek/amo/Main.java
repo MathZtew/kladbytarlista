@@ -23,7 +23,7 @@ public class Main {
         JFrame frame = new JFrame("Chat Frame");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
-        JPanel panel = new JPanel(new MigLayout("", "[][fill, grow][fill, grow]", "[][][][][][fill, grow]"));
+        JPanel panel = new JPanel(new MigLayout("", "[][fill, grow][fill, grow]", "[][][][][fill, grow]"));
         NumberFormat format = NumberFormat.getInstance();
         NumberFormatter formatter = new NumberFormatter(format);
         formatter.setValueClass(Integer.class);
@@ -55,13 +55,9 @@ public class Main {
         panel.add(clothesLabel, "cell 0 1");
         JLabel otherLabel = new JLabel("Övrigt:");
         panel.add(otherLabel, "cell 0 2");
-        JLabel ipLabel = new JLabel("IP-adress:");
-        panel.add(ipLabel, "cell 0 3");
-        JLabel passwordLabel = new JLabel("Lösenord:");
-        panel.add(passwordLabel, "cell 0 4");
 
         MultiLineLabel statusLabel = new MultiLineLabel("Status");
-        panel.add(statusLabel, "cell 0 5, span 3 1");
+        panel.add(statusLabel, "cell 0 4, span 3 1");
 
         JTextField liuidTextField = new JTextField();
         panel.add(liuidTextField, "cell 1 0,");
@@ -72,12 +68,6 @@ public class Main {
         JFormattedTextField otherTextField = new JFormattedTextField(formatter);
         otherTextField.setValue(0);
         panel.add(otherTextField, "cell 1 2");
-        JFormattedTextField ipTextField = new JFormattedTextField(formatter);
-        otherTextField.setValue(0);
-        panel.add(ipTextField, "cell 1 3");
-        JFormattedTextField passwordTextField = new JFormattedTextField(formatter);
-        otherTextField.setValue(0);
-        panel.add(passwordTextField, "cell 1 4");
 
         Button addButton = new Button("Add");
         panel.add(addButton, "cell 2 1");
@@ -85,7 +75,7 @@ public class Main {
         panel.add(removeButton, "cell 2 2");
 
         JLabel buttonStatusLabel = new JLabel("");
-        panel.add(buttonStatusLabel, "cell 2 3");
+        panel.add(buttonStatusLabel, "cell 0 3, span 3 1");
 
         liuidTextField.getDocument().addDocumentListener(new DocumentListener()
         {
