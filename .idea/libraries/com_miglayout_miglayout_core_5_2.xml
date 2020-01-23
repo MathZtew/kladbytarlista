@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com.miglayout:miglayout-core:5.2" type="repository">
+    <properties maven-id="com.miglayout:miglayout-core:5.2" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/miglayout/miglayout-core/5.2/miglayout-core-5.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
