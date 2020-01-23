@@ -1,1 +1,12 @@
-{"students":{"matsa159":{"liuId":"matsa159","clothes":0,"other":0},"aaaaa321":{"liuId":"aaaaa321","clothes":0,"other":0}}}
+[
+  {
+    "liuId": "matsa159",
+    "clothes": 6,
+    "other": 0
+  },
+  {
+    "liuId": "testa123",
+    "clothes": 3,
+    "other": 3
+  }
+]

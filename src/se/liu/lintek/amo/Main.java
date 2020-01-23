@@ -1,6 +1,5 @@
 package se.liu.lintek.amo;
 
-import com.google.gson.Gson;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -10,14 +9,15 @@ import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
 
 public class Main {
 
-    final static Object[] options = {"Yes, please", "No, thanks"};
+    final static Object[] OPTIONS = {"Yes, please", "No, thanks"};
+    final static String PATH = "students.json";
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Chat Frame");
@@ -34,6 +34,13 @@ public class Main {
         formatter.setCommitsOnValidEdit(true);
 
         StudentsList students = new StudentsList();
+
+        try {
+            students.importStudents(PATH);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Could not import database");
+        }
 
         JMenuBar mb = new JMenuBar();
         JMenu m1 = new JMenu("FILE");
@@ -103,92 +110,107 @@ public class Main {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                int clothes;
-                int other;
-                String student;
-                try {
-                    clothes = Integer.parseInt(clothesTextField.getText());
-                    other = Integer.parseInt(otherTextField.getText());
-                    student = liuidTextField.getText();
-
-                } catch (NumberFormatException e) {
-                    buttonStatusLabel.setText("Add failure");
-                    return;
-                }
-                if (students.addValues(student, clothes, other)) {
-                    buttonStatusLabel.setText("Add success");
-                }
-                else if (!students.contains(student) && StudentsList.isLiuId(student)) {
-                    int toAdd = JOptionPane.showOptionDialog(frame,
-                            "Do you want to add new student "
-                                    + student + "?",
-                            "New student",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[1]);
-                    if (toAdd == 0) {
-                        students.addStudent(student, clothes, other);
-                        buttonStatusLabel.setText("Add success");
-                    }
-                }
-                else {
-                    buttonStatusLabel.setText("Add failure");
-                }
-                Gson obj = new Gson();
-                String json = obj.toJson(students);
-                System.out.println(json);
-                try {
-                    Files.write(Paths.get("students.json"), json.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                statusLabel.setText(students.getStatus(liuidTextField.getText()));
+                modButtonPress(
+                        clothesTextField,
+                        otherTextField,
+                        liuidTextField,
+                        buttonStatusLabel,
+                        students,
+                        frame,
+                        statusLabel,
+                        "Add success",
+                        "Add failure",
+                        false);
             }
         });
 
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                int clothes;
-                int other;
-                String student;
-                try {
-                    clothes = Integer.parseInt(clothesTextField.getText());
-                    other = Integer.parseInt(otherTextField.getText());
-                    student = liuidTextField.getText();
-                } catch (NumberFormatException e) {
-                    buttonStatusLabel.setText("Remove failure");
-                    return;
-                }
-                if (students.removeValues(student, clothes, other)) {
-                    buttonStatusLabel.setText("Remove success");
-                }
-                else if (!students.contains(student) && StudentsList.isLiuId(student)) {
-                    int toAdd = JOptionPane.showOptionDialog(frame,
-                            "Do you want to add new student "
-                                    + student + "?",
-                            "New student",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[1]);
-                    if (toAdd == 0) {
-                        students.addStudent(student, -clothes, -other);
-                        buttonStatusLabel.setText("Remove success");
-                    }
-                }
-                else {
-                    buttonStatusLabel.setText("Remove failure");
-                }
-                statusLabel.setText(students.getStatus(liuidTextField.getText()));
+                modButtonPress(
+                        clothesTextField,
+                        otherTextField,
+                        liuidTextField,
+                        buttonStatusLabel,
+                        students,
+                        frame,
+                        statusLabel,
+                        "Remove success",
+                        "Remove failure",
+                        true);
             }
         });
 
         frame.getContentPane().add(BorderLayout.CENTER, panel);
 
         frame.setVisible(true);
+    }
+
+    private static void modButtonPress(
+            JFormattedTextField clothesTextField,
+            JFormattedTextField otherTextField,
+            JTextField liuidTextField,
+            JLabel buttonStatusLabel,
+            StudentsList students,
+            JFrame frame,
+            MultiLineLabel statusLabel,
+            String success,
+            String failure,
+            boolean remove) {
+
+        int clothes;
+        int other;
+        String student;
+        try {
+            clothes = Integer.parseInt(clothesTextField.getText());
+            other = Integer.parseInt(otherTextField.getText());
+            student = liuidTextField.getText();
+
+        } catch (NumberFormatException e) {
+            buttonStatusLabel.setText(failure);
+            return;
+        }
+        if (remove && students.removeValues(student, clothes, other)){
+            buttonStatusLabel.setText(success);
+        }
+        else if (!remove && students.addValues(student, clothes, other)) {
+            buttonStatusLabel.setText(success);
+        }
+        else if (!students.contains(student) && StudentsList.isLiuId(student)) {
+            clothes = remove ? -clothes : clothes;
+            other = remove ? -other : other;
+            addStudentDialog(clothes, other, student, frame, students, buttonStatusLabel, success);
+        }
+        else {
+            buttonStatusLabel.setText(failure);
+            return;
+        }
+        String json = students.getJson();
+        WriteJsonFile(json);
+        statusLabel.setText(students.getStatus(liuidTextField.getText()));
+    }
+
+    private static void WriteJsonFile(String json) {
+        try {
+            Files.write(Paths.get(PATH), json.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void addStudentDialog(int clothes, int other, String student, JFrame frame, StudentsList students, JLabel buttonStatusLabel, String message) {
+        int toAdd = JOptionPane.showOptionDialog(frame,
+                "Do you want to add new student "
+                        + student + "?",
+                "New student",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                OPTIONS,
+                OPTIONS[1]);
+        if (toAdd == 0) {
+            students.addStudent(student, clothes, other);
+            buttonStatusLabel.setText(message);
+        }
     }
 }

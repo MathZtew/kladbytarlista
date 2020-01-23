@@ -1,5 +1,12 @@
 package se.liu.lintek.amo;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,10 +14,41 @@ public class StudentsList {
     Map<String, Student> students;
 
     public StudentsList() {
-        students = new HashMap<String, Student>();
-        students.put("matsa159", new Student("matsa159"));
-        System.out.println(students);
-        System.out.println(students.containsKey("matsa159"));
+        students = new HashMap<>();
+    }
+
+    public void importStudents(String path) throws IOException {
+        try {
+            InputStream is = new FileInputStream(path);
+
+            BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+
+            String line = buf.readLine();
+            StringBuilder sb = new StringBuilder();
+
+            while (line != null) {
+                sb.append(line).append("\n");
+                line = buf.readLine();
+            }
+
+            String fileAsString = sb.toString();
+
+            Student[] test = new Gson().fromJson(fileAsString, Student[].class);
+            if (test != null) {
+                for (Student student : test) {
+                    addStudent(student);
+                }
+            }
+            System.out.println(Arrays.toString(test));
+        } catch (FileNotFoundException e) {
+            System.out.println("Creating file");
+            try {
+                String temp = "";
+                Files.write(Paths.get(path), temp.getBytes());
+            } catch (IOException ioe) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean contains(String liuId) {
@@ -64,6 +102,10 @@ public class StudentsList {
         }
     }
 
+    public void addStudent(Student student) {
+        students.put(student.getLiuId(), student);
+    }
+
     static boolean isLiuId(String liuId) {
         if (liuId.length() == 8) {
             try {
@@ -84,5 +126,23 @@ public class StudentsList {
             }
         }
         return false;
+    }
+
+    public Student[] getStudents() {
+        return students.values().toArray(new Student[0]);
+    }
+
+    public String getJson() {
+        Gson obj = new GsonBuilder().setPrettyPrinting().create();
+        String json = obj.toJson(getStudents());
+        System.out.println(json);
+        return json;
+    }
+
+    @Override
+    public String toString() {
+        return "StudentsList{" +
+                "students=" + students +
+                '}';
     }
 }
