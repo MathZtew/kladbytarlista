@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StudentsList {
+public class StudentList {
     Map<String, Student> students;
 
-    public StudentsList() {
+    public StudentList() {
         students = new HashMap<>();
     }
 

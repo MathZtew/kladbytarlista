@@ -7,9 +7,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
@@ -33,7 +31,7 @@ public class Main {
         // If you want the value to be committed on each keystroke instead of focus lost
         formatter.setCommitsOnValidEdit(true);
 
-        StudentsList students = new StudentsList();
+        StudentList students = new StudentList();
 
         try {
             students.importStudents(PATH);
@@ -97,39 +95,29 @@ public class Main {
             public void changedUpdate(DocumentEvent e) {} // Not needed for plain-text fields
         });
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                modButtonPress(
-                        clothesTextField,
-                        otherTextField,
-                        liuidTextField,
-                        buttonStatusLabel,
-                        students,
-                        frame,
-                        statusLabel,
-                        "Add success",
-                        "Add failure",
-                        false);
-            }
-        });
+        addButton.addActionListener(actionEvent -> modButtonPress(
+                clothesTextField,
+                otherTextField,
+                liuidTextField,
+                buttonStatusLabel,
+                students,
+                frame,
+                statusLabel,
+                "Add success",
+                "Add failure",
+                false));
 
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                modButtonPress(
-                        clothesTextField,
-                        otherTextField,
-                        liuidTextField,
-                        buttonStatusLabel,
-                        students,
-                        frame,
-                        statusLabel,
-                        "Remove success",
-                        "Remove failure",
-                        true);
-            }
-        });
+        removeButton.addActionListener(actionEvent -> modButtonPress(
+                clothesTextField,
+                otherTextField,
+                liuidTextField,
+                buttonStatusLabel,
+                students,
+                frame,
+                statusLabel,
+                "Remove success",
+                "Remove failure",
+                true));
 
         frame.getContentPane().add(BorderLayout.CENTER, panel);
 
@@ -141,7 +129,7 @@ public class Main {
             JFormattedTextField otherTextField,
             JTextField liuidTextField,
             JLabel buttonStatusLabel,
-            StudentsList students,
+            StudentList students,
             JFrame frame,
             MultiLineLabel statusLabel,
             String success,
@@ -166,7 +154,7 @@ public class Main {
         else if (!remove && students.addValues(student, clothes, other)) {
             buttonStatusLabel.setText(success);
         }
-        else if (!students.contains(student) && StudentsList.isLiuId(student)) {
+        else if (!students.contains(student) && StudentList.isLiuId(student)) {
             clothes = remove ? -clothes : clothes;
             other = remove ? -other : other;
             addStudentDialog(clothes, other, student, frame, students, buttonStatusLabel, success);
@@ -188,7 +176,7 @@ public class Main {
         }
     }
 
-    private static void addStudentDialog(int clothes, int other, String student, JFrame frame, StudentsList students, JLabel buttonStatusLabel, String message) {
+    private static void addStudentDialog(int clothes, int other, String student, JFrame frame, StudentList students, JLabel buttonStatusLabel, String message) {
         int toAdd = JOptionPane.showOptionDialog(frame,
                 "Do you want to add new student "
                         + student + "?",

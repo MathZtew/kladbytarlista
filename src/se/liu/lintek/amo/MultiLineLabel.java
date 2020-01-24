@@ -1,8 +1,11 @@
-// This example is from the book _Java in a Nutshell_ by David Flanagan.
-//Written by David Flanagan. Copyright (c) 1996 O'Reilly & Associates.
-//You may study, use, modify, and distribute this example for any purpose.
-//This example is provided WITHOUT WARRANTY either expressed or implied.
+/*
+  This example is from the book _Java in a Nutshell_ by David Flanagan.
+  Written by David Flanagan. Copyright (c) 1996 O'Reilly & Associates.
+  You may study, use, modify, and distribute this example for any purpose.
+  This example is provided WITHOUT WARRANTY either expressed or implied.
 
+  Updated for use in klädbytarlista by Mattias Salo 2020-01-21
+*/
 package se.liu.lintek.amo;
 
 import java.awt.Canvas;
@@ -38,8 +41,11 @@ public class MultiLineLabel extends Canvas {
 
     protected int alignment = LEFT; // The alignment of the text.
 
-    // This method breaks a specified label up into an array of lines.
-    // It uses the StringTokenizer utility class.
+    /**
+     * This method breaks a specified label up into an array of lines.
+     * It uses the StringTokenizer utility class.
+     * @param label Text to be shown.
+     */
     protected void newLabel(String label) {
         StringTokenizer t = new StringTokenizer(label, "\n");
         num_lines = t.countTokens();
@@ -49,8 +55,10 @@ public class MultiLineLabel extends Canvas {
             lines[i] = t.nextToken();
     }
 
-    // This method figures out how the font is, and how wide each
-    // line of the label is, and how wide the widest line is.
+    /**
+     * This method figures out how the font is, and how wide each
+     * line of the label is, and how wide the widest line is.
+     */
     protected void measure() {
         FontMetrics fm = getFontMetrics(getFont());
         // If we don't have font metrics yet, just return.
@@ -134,33 +142,46 @@ public class MultiLineLabel extends Canvas {
         return margin_height;
     }
 
-    // This method is invoked after our Canvas is first created
-    // but before it can actually be displayed. After we've
-    // invoked our superclass's addNotify() method, we have font
-    // metrics and can successfully call measure() to figure out
-    // how big the label is.
+    /**
+     * This method is invoked after our Canvas is first created
+     * but before it can actually be displayed. After we've
+     * invoked our superclass's addNotify() method, we have font
+     * metrics and can successfully call measure() to figure out
+     * how big the label is.
+     */
     public void addNotify() {
         super.addNotify();
         measure();
     }
 
-    // This method is called by a layout manager when it wants to
-    // know how big we'd like to be.
+    /**
+     * This method is called by a layout manager when it wants to
+     * know how big we'd like to be.
+     * @return the preferred size
+     */
     public Dimension getPreferredSize() {
         return new Dimension(max_width + 2 * margin_width, num_lines
                 * line_height + 2 * margin_height);
     }
 
-    // This method is called when the layout manager wants to know
-    // the bare minimum amount of space we need to get by.
+    /**
+     * This method is called when the layout manager wants to know
+     * the bare minimum amount of space we need to get by.
+     * @return The minimum size
+     */
+
     public Dimension getMinimumSize() {
         return new Dimension(max_width, num_lines * line_height);
     }
 
-    // This method draws the label (applets use the same method).
-    // Note that it handles the margins and the alignment, but that
-    // it doesn't have to worry about the color or font--the superclass
-    // takes care of setting those in the Graphics object we're passed.
+    /**
+     * This method draws the label (applets use the same method).
+     * Note that it handles the margins and the alignment, but that
+     * it doesn't have to worry about the color or font--the superclass
+     * takes care of setting those in the Graphics object we're passed.
+     * @param g
+     */
+
     public void paint(Graphics g) {
         int x, y;
         Dimension d = getSize();
