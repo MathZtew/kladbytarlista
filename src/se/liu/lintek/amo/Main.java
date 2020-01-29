@@ -54,7 +54,7 @@ public class Main {
         JLabel otherLabel = new JLabel("Övrigt:");
         panel.add(otherLabel, "cell 0 2");
 
-        MultiLineLabel statusLabel = new MultiLineLabel("Status");
+        JLabel statusLabel = new JLabel("Status");
         panel.add(statusLabel, "cell 0 4, span 3 1");
 
         JTextField liuidTextField = new JTextField();
@@ -81,14 +81,14 @@ public class Main {
             public void removeUpdate(DocumentEvent e)
             {
                 buttonStatusLabel.setText("");
-                statusLabel.setText(students.getStatus(liuidTextField.getText()));
+                setStatusText(liuidTextField, students, statusLabel);
             }
 
             @Override
             public void insertUpdate(DocumentEvent e)
             {
                 buttonStatusLabel.setText("");
-                statusLabel.setText(students.getStatus(liuidTextField.getText()));
+                setStatusText(liuidTextField, students, statusLabel);
             }
 
             @Override
@@ -131,7 +131,7 @@ public class Main {
             JLabel buttonStatusLabel,
             StudentList students,
             JFrame frame,
-            MultiLineLabel statusLabel,
+            JLabel statusLabel,
             String success,
             String failure,
             boolean remove) {
@@ -165,7 +165,11 @@ public class Main {
         }
         String json = students.getJson();
         WriteJsonFile(json);
-        statusLabel.setText(students.getStatus(liuidTextField.getText()));
+        setStatusText(liuidTextField, students, statusLabel);
+    }
+
+    private static void setStatusText(JTextField liuidTextField, StudentList students, JLabel statusLabel) {
+        statusLabel.setText(convertToMultiline(students.getStatus(liuidTextField.getText())));
     }
 
     private static void WriteJsonFile(String json) {
@@ -190,5 +194,10 @@ public class Main {
             students.addStudent(student, clothes, other);
             buttonStatusLabel.setText(message);
         }
+    }
+
+    private static String convertToMultiline(String orig)
+    {
+        return "<html>" + orig.replaceAll("\n", "<br>");
     }
 }
