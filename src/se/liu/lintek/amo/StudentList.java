@@ -135,7 +135,6 @@ public class StudentList {
     public String getJson() {
         Gson obj = new GsonBuilder().setPrettyPrinting().create();
         String json = obj.toJson(getStudents());
-        System.out.println(json);
         return json;
     }
 
