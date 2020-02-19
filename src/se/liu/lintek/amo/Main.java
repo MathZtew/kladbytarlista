@@ -14,7 +14,7 @@ import java.text.NumberFormat;
 
 public class Main {
 
-    final static Object[] OPTIONS = {"Yes, please", "No, thanks"};
+    final static Object[] OPTIONS = {"Ja", "Nej"};
     final static String PATH = "students.json";
 
     public static void main(String[] args) {
@@ -32,6 +32,7 @@ public class Main {
         formatter.setCommitsOnValidEdit(true);
 
         StudentList students = new StudentList();
+
 
         try {
             students.importStudents(PATH);
@@ -67,9 +68,9 @@ public class Main {
         otherTextField.setValue(0);
         panel.add(otherTextField, "cell 1 2");
 
-        Button addButton = new Button("Add");
+        Button addButton = new Button("Lägg till");
         panel.add(addButton, "cell 2 1");
-        Button removeButton = new Button("Remove");
+        Button removeButton = new Button("Ta bort");
         panel.add(removeButton, "cell 2 2");
 
         JLabel buttonStatusLabel = new JLabel("");
@@ -103,8 +104,8 @@ public class Main {
                 students,
                 frame,
                 statusLabel,
-                "Add success",
-                "Add failure",
+                "Lyckades lägga till",
+                "Lyckades inte lägga till",
                 false));
 
         removeButton.addActionListener(actionEvent -> modButtonPress(
@@ -115,13 +116,20 @@ public class Main {
                 students,
                 frame,
                 statusLabel,
-                "Remove success",
-                "Remove failure",
+                "Lyckades ta bort",
+                "Lyckades inte ta bort",
                 true));
 
         frame.getContentPane().add(BorderLayout.CENTER, panel);
 
         frame.setVisible(true);
+
+        /*
+        for (int i = 0; i < 1000; i++) {
+            String tempstudent = "aaaaa" + String.format("%03d", i);
+            students.addStudent(tempstudent, i, 1000 - i);
+        }
+        */
     }
 
     private static void modButtonPress(
@@ -166,6 +174,7 @@ public class Main {
         String json = students.getJson();
         WriteJsonFile(json);
         setStatusText(liuidTextField, students, statusLabel);
+
     }
 
     private static void setStatusText(JTextField liuidTextField, StudentList students, JLabel statusLabel) {
@@ -182,9 +191,9 @@ public class Main {
 
     private static void addStudentDialog(int clothes, int other, String student, JFrame frame, StudentList students, JLabel buttonStatusLabel, String message) {
         int toAdd = JOptionPane.showOptionDialog(frame,
-                "Do you want to add new student "
+                "Vill du lägga till en ny student "
                         + student + "?",
-                "New student",
+                "Ny student",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,

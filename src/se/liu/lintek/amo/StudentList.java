@@ -63,15 +63,15 @@ public class StudentList {
         if (isLiuId(liuId)) {
             if (contains(liuId)) {
                 Student student = get(liuId);
-                return "Valid LiUID\nIn database\n" +
+                return "Giltigt LiUID\ni databasen\n" +
                         "liUID: " + student.getLiuId() + "\n" +
-                        "Clothes: " + student.getClothes() + "\n" +
-                        "Other: " + student.getOther();
+                        "Kläder: " + student.getClothes() + "\n" +
+                        "Annat: " + student.getOther();
             }
-            return "Valid LiUID\nNot in database";
+            return "Giltigt LiUID\nEj i databasen";
         }
         else {
-            return "Not a valid LiUID";
+            return "Ej giltigt LiUID";
         }
     }
 
