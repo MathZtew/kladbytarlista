@@ -18,7 +18,7 @@ public class Main {
     final static String PATH = "students.json";
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Chat Frame");
+        JFrame frame = new JFrame("Klädbytardagen");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         JPanel panel = new JPanel(new MigLayout("", "[][fill, grow][fill, grow]", "[][][][][fill, grow]"));
